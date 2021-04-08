@@ -12,11 +12,13 @@
 #define color_green      10
 #define color_white		 15
 
+// CAMBIO	
 
 using namespace std;
 
 mutex mtx;
 
+// TOMELA 2	
 
 #pragma region Definicion de estructuras
 
