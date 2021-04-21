@@ -725,7 +725,7 @@ int main()
 		insertarMarcoDeMemoria(mrme, crearMarcoMemoria(64, (i + 1)));
 #pragma endregion
 
-	aperturaConcurrente(procs);
+	//aperturaConcurrente(procs);
 	//aperturaNoConcurrente(procs);
 
 
