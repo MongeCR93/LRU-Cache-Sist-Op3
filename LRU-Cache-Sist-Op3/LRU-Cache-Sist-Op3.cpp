@@ -1,16 +1,21 @@
-// LRUCacheSimulator.cpp : Este archivo contiene la función "main". La ejecución del programa comienza y termina ahí.
-//
-
-#include "pch.h"
-#include <windows.h> 
+//#include "pch.h"     --Se elimina para poder hacer la prueba en LINUX
+//#include <windows.h> --Se elimina para poder hacer la prueba en LINUX 
 #include <iostream> 
 #include <thread>  //Manejo de hilos
 #include <mutex>  //Manejo de hilos
 
 
 
-#define color_green      10
-#define color_white		 15
+
+//Linux console text color codes
+#define color_red_linux			31		 
+#define color_green_linux		32		 
+#define color_blue_linux		34		 
+#define color_default_linux     33	
+#define color_gray_linux		37  //A modo de sustitucion de Aqua para Windows	
+
+
+
 
 // CAMBIO	
 
@@ -146,7 +151,7 @@ proceso * crearProceso(string nombre, float memoriaReq, int id) {
 	Cambio de foreground para la salida en consola
 */
 void setColor(int value) {
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), value);
+	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), value); --Se elimina para poder hacer la prueba en LINUX
 }
 
 /*
@@ -726,7 +731,7 @@ int main()
 #pragma endregion
 
 	//aperturaConcurrente(procs);
-	//aperturaNoConcurrente(procs);
+	aperturaNoConcurrente(procs);
 
 
 
