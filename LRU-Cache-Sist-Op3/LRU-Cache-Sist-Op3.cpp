@@ -1,5 +1,5 @@
-//#include "pch.h"     --Se elimina para poder hacer la prueba en LINUX
-//#include <windows.h> --Se elimina para poder hacer la prueba en LINUX 
+//#include "pch.h"  --Se elimina para poder hacer la prueba en WINDOWS sin  usar VS
+#include <windows.h> 
 #include <iostream> 
 #include <thread>  //Manejo de hilos
 #include <mutex>  //Manejo de hilos
@@ -7,12 +7,13 @@
 
 
 
-//Linux console text color codes
-#define color_red_linux			31		 
-#define color_green_linux		32		 
-#define color_blue_linux		34		 
-#define color_default_linux     33	
-#define color_gray_linux		37  //A modo de sustitucion de Aqua para Windows	
+
+//Windows console text color codes
+#define color_blue	     9
+#define color_white		 7
+#define color_green		 2
+#define color_aqua		 3
+#define color_red		 4
 
 
 
@@ -151,7 +152,7 @@ proceso * crearProceso(string nombre, float memoriaReq, int id) {
 	Cambio de foreground para la salida en consola
 */
 void setColor(int value) {
-	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), value); --Se elimina para poder hacer la prueba en LINUX
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), value); 
 }
 
 /*
@@ -504,24 +505,24 @@ void insertarLru(LRUCache &cabLRU, lruCache * nuevo) {
 */
 void listarProcesos(Procesos cab) {
 	if (cab == NULL) {
-		setColor(4);
+		setColor(color_red);
 		cout << "---No hay procesos disponibles---" << endl;
 	}
 	else {
 		Procesos aux = cab;
 		while (aux != NULL) {
-			setColor(7);
+			setColor(color_white);
 			cout << "Proceso : ";
-			setColor(9);
+			setColor(color_green);
 			cout << aux->nombre.c_str() << endl;
 			cout << endl;
 			Paginas  auxP = aux->pags;
 			if (auxP == NULL) {
-				setColor(4);
+				setColor(color_red);
 				cout << "		-No hay paginas disponibles-" << endl;
 			}
 			else {
-				setColor(3);
+				setColor(color_aqua);
 				while (auxP != NULL) {
 					string enUso = "No";
 					string enEspera = "No";
@@ -535,11 +536,11 @@ void listarProcesos(Procesos cab) {
 					cout << "		En uso             : " << enUso.c_str() << endl;
 					cout << "		En espera          : " << enEspera.c_str() << endl;
 					cout << endl;
-					setColor(1);
+					setColor(color_blue);
 					cout << "		_____________________________" << endl;
 					cout << endl;
 					auxP = auxP->sig;
-					setColor(3);
+					setColor(color_aqua);
 				}
 			}
 			aux = aux->sig;
@@ -550,13 +551,13 @@ void listarProcesos(Procesos cab) {
 
 void listarMarcos(MarcosDeMemoria cab) {
 	if (cab == NULL) {
-		setColor(4);
+		setColor(color_red);
 		cout << "--No hay marcos de memoria disponibles--" << endl;
 	}
 	else {
 		MarcosDeMemoria aux = cab;
 		cout << "		Marcos de memoria" << endl;
-		setColor(3);
+		setColor(color_aqua);
 		while (aux != NULL) {
 
 			string estado = "Libre";
@@ -571,14 +572,14 @@ void listarMarcos(MarcosDeMemoria cab) {
 				cout << endl;
 				cout << endl;
 				cout << "			Alojando            : ";
-				setColor(2);
+				setColor(color_green);
 				cout << "	Proceso -> " << aux->paginaAlojada->idProceso << " Pagina- > " << aux->paginaAlojada->nPag << endl;
-				setColor(3);
+				setColor(color_aqua);
 				cout << "			Memoria Requerida   :" << aux->paginaAlojada->memoriaRequerida << " MB" << endl;
 			}
-			setColor(1);
+			setColor(color_red);
 			cout << "_________________________________" << endl;
-			setColor(3);
+			setColor(color_aqua);
 			aux = aux->sig;
 		}
 	}
@@ -730,8 +731,8 @@ int main()
 		insertarMarcoDeMemoria(mrme, crearMarcoMemoria(64, (i + 1)));
 #pragma endregion
 
-	//aperturaConcurrente(procs);
-	aperturaNoConcurrente(procs);
+	aperturaConcurrente(procs);
+	//aperturaNoConcurrente(procs);
 
 
 
