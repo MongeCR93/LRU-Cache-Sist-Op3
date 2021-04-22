@@ -1,6 +1,7 @@
 //#include "pch.h"     --Se elimina para poder hacer la prueba en LINUX
 //#include <windows.h> --Se elimina para poder hacer la prueba en LINUX 
 #include <iostream> 
+#include <stdio.h>  //I/O cabecera de libreria estandar 
 #include <thread>  //Manejo de hilos
 #include <mutex>  //Manejo de hilos
 
@@ -8,11 +9,11 @@
 
 
 //Linux console text color codes
-#define color_red_linux			31		 
-#define color_green_linux		32		 
-#define color_blue_linux		34		 
-#define color_default_linux     33	
-#define color_gray_linux		37  //A modo de sustitucion de Aqua para Windows	
+#define color_red_linux			"\033[0;31m"		 
+#define color_green_linux		"\033[0;32m"  		 
+#define color_blue_linux		"\033[0;96m"  		 
+#define color_default_linux     "\033[0;33m"  
+#define color_gray_linux		"\033[0;37m"  //A modo de sustitucion de Aqua para Windows	
 
 
 
@@ -146,13 +147,6 @@ proceso * crearProceso(string nombre, float memoriaReq, int id) {
 #pragma endregion
 
 #pragma region Utilidades
-
-/*
-	Cambio de foreground para la salida en consola
-*/
-void setColor(int value) {
-	//SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), value); --Se elimina para poder hacer la prueba en LINUX
-}
 
 /*
 	Cantidad de procesos en una lista.
@@ -504,24 +498,21 @@ void insertarLru(LRUCache &cabLRU, lruCache * nuevo) {
 */
 void listarProcesos(Procesos cab) {
 	if (cab == NULL) {
-		setColor(4);
+		
 		cout << "---No hay procesos disponibles---" << endl;
 	}
 	else {
 		Procesos aux = cab;
 		while (aux != NULL) {
-			setColor(7);
-			cout << "Proceso : ";
-			setColor(9);
-			cout << aux->nombre.c_str() << endl;
+			
+			cout << color_red_linux << "Proceso : ";
+			cout << color_blue_linux <<aux->nombre.c_str() << endl;
 			cout << endl;
 			Paginas  auxP = aux->pags;
 			if (auxP == NULL) {
-				setColor(4);
-				cout << "		-No hay paginas disponibles-" << endl;
+				cout <<color_red_linux << "		-No hay paginas disponibles-" << endl;
 			}
 			else {
-				setColor(3);
 				while (auxP != NULL) {
 					string enUso = "No";
 					string enEspera = "No";
@@ -530,16 +521,15 @@ void listarProcesos(Procesos cab) {
 					if (auxP->enEspera)
 						enEspera = "Si";
 
-					cout << "		Numero de pagina   : " << auxP->nPag << endl;
-					cout << "		Memoria requerida  : " << auxP->memoriaRequerida << endl;
-					cout << "		En uso             : " << enUso.c_str() << endl;
-					cout << "		En espera          : " << enEspera.c_str() << endl;
+					cout <<color_gray_linux << "		Numero de pagina   : " << auxP->nPag << endl;
+					cout << color_gray_linux << "		Memoria requerida  : " << auxP->memoriaRequerida << endl;
+					cout << color_gray_linux << "		En uso             : " << enUso.c_str() << endl;
+					cout << color_gray_linux <<"		En espera          : " << enEspera.c_str() << endl;
 					cout << endl;
-					setColor(1);
-					cout << "		_____________________________" << endl;
+					cout <<color_blue_linux<< "		_____________________________" << endl;
 					cout << endl;
 					auxP = auxP->sig;
-					setColor(3);
+					
 				}
 			}
 			aux = aux->sig;
@@ -550,35 +540,30 @@ void listarProcesos(Procesos cab) {
 
 void listarMarcos(MarcosDeMemoria cab) {
 	if (cab == NULL) {
-		setColor(4);
-		cout << "--No hay marcos de memoria disponibles--" << endl;
+		cout <<color_red_linux<< "--No hay marcos de memoria disponibles--" << endl;
 	}
 	else {
 		MarcosDeMemoria aux = cab;
 		cout << "		Marcos de memoria" << endl;
-		setColor(3);
 		while (aux != NULL) {
 
 			string estado = "Libre";
 			if (aux->enUso)
 				estado = "En uso";
 
-			cout << "ID Marco		  : " << aux->idMarco << endl;
-			cout << "Capacidad almacenamiento  : " << aux->espacioInicial << " MB" << endl;
-			cout << "Almacenamiento disponible : " << aux->espacioDisponible << " MB" << endl;
-			cout << "Estado			  : " << estado.c_str() << endl;
+			cout << color_blue_linux<< "ID Marco		  : " << aux->idMarco << endl;
+			cout << color_blue_linux<<"Capacidad almacenamiento  : " << aux->espacioInicial << " MB" << endl;
+			cout << color_blue_linux<<"Almacenamiento disponible : " << aux->espacioDisponible << " MB" << endl;
+			cout << color_blue_linux<<"Estado			  : " << estado.c_str() << endl;
 			if (aux->paginaAlojada != NULL) {
 				cout << endl;
 				cout << endl;
 				cout << "			Alojando            : ";
-				setColor(2);
-				cout << "	Proceso -> " << aux->paginaAlojada->idProceso << " Pagina- > " << aux->paginaAlojada->nPag << endl;
-				setColor(3);
-				cout << "			Memoria Requerida   :" << aux->paginaAlojada->memoriaRequerida << " MB" << endl;
+				
+				cout << color_green_linux << "	Proceso -> " << aux->paginaAlojada->idProceso << " Pagina- > " << aux->paginaAlojada->nPag << endl;
+				cout << color_green_linux<<"			Memoria Requerida   :" << aux->paginaAlojada->memoriaRequerida << " MB" << endl;
 			}
-			setColor(1);
-			cout << "_________________________________" << endl;
-			setColor(3);
+			cout << color_red_linux <<"_________________________________" << endl;
 			aux = aux->sig;
 		}
 	}
@@ -730,13 +715,15 @@ int main()
 		insertarMarcoDeMemoria(mrme, crearMarcoMemoria(64, (i + 1)));
 #pragma endregion
 
-	//aperturaConcurrente(procs);
-	aperturaNoConcurrente(procs);
+	aperturaConcurrente(procs);
+	//aperturaNoConcurrente(procs);
 
 
 
 	listarMarcos(mrme);
-	system("Pause");
+	cout << color_green_linux <<"Presione una tecla para continuar..." << endl;
+	int c = getchar();
+	//system("Pause");// --Solo Windows
 
 }
 
